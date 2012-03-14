@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> 
+      {title} 
+    </title>
+  </head>
+  <body>
+    <div id="main">
+      <h1>Dustjs Examples</h1>
+      <a href="https://github.com/akdubya/dustjs/blob/master/test/examples.js">Dust examples </a>
+      {! this is a comment !}
+
+      {! replace !}
+      Hello {name}! You have {count} messages.
+
+      {! array !}
+      {#names}
+        {title} {name}{~n}
+      {/names}
+        
+      {! rename_key, params, context !}
+      {#person:cntxt foo=root}
+        {foo}: {name}, {age}
+      {/person}
+      
+      {! escape !}
+      {safe|s}{~n}{unsafe}
+
+      {! else_block, conditional !}
+      {^foo}
+        no foo
+      {/foo}
+      {?foo}
+        {#foo}
+          foo,{~s}
+        {:else}
+          not foo,{~s}
+        {/foo}
+      {/foo}
+      
+      {! @thing !}
+      {#numbers}
+        {.}{@idx}{.}{/idx} {@sep}, {/sep} {@custom /}
+      {/numbers}
+
+      {! partials, blocks and inline partials !}
+      start {~n}
+      {+title}
+        Base Title
+      {/title}
+      end
+
+      {>base_template/}
+      {<title}
+        Child Title
+      {/title}
+
+      {! filters !}
+      {foo|s}
+      {foo|h}
+      {foo|j}
+      {foo|u}
+      {foo|uc}
+
+      {! Errors !}
+      {>inlines_must_be_self_closing}
+      {#filter_dont_apply_here|j}
+      {:else}
+
+    </div>
+    
+  </body>
+</html>
+
