@@ -22,6 +22,7 @@ dustjs.vim for working with dust js templates (http://akdubya.github.com/dustjs/
 * tpope's surround
    let g:surround_{char2nr('d')} = "{\r}"
 * snipmate
+   copy the snippets/dustjs folder to your snippets folder
 
 ## Thanks
 * [Github/juvenn](/juvenn) for the mustache.vim plugin
