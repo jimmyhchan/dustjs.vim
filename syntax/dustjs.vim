@@ -54,8 +54,8 @@ syn cluster dustInlinePart contains=dustSpecial,dustLiteral
 syn match dustLiteral /\v[^"]*/ containedin=@dustInlinePart contained
 
 syn match dustContext /\v:[a-zA-Z_$][0-9azA-Z_$]*/ containedin=dustStartSectionTag,dustPartial contained 
-syn region dustParamKey matchgroup=dustParamKeyContent start=/[\t\v\f ]/ end=/=/ containedin=@dustParams contained contains=dustKey nextgroup=dustParamValue oneline
-syn region dustParamValue matchgroup=dustParamValueContent start=/=\"?/ end=/["\t\v\f ]|$/ containedin=@dustParams contained contains=@dustIdentifier,dustInline oneline
+syn region dustParamKey matchgroup=dustParamKeyContent start=/[\t ]/ end=/=/ containedin=@dustParams contained contains=dustKey nextgroup=dustParamValue oneline
+syn region dustParamValue matchgroup=dustParamValueContent start=/=\"?/ end=/["\t ]|$/ containedin=@dustParams contained contains=@dustIdentifier,dustInline oneline
 syn cluster dustParams contains=dustParamKey,dustParamValue
 
 "Specials (space, newline, return, left brace, right brace)
