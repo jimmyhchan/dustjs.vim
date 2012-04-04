@@ -37,7 +37,7 @@ endif
 "  starts with '{!'
 "  contain anything but '!}', including whitespace and newline
 "  ends with '!}'
-syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=htmldustContainer
+syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=@htmldustContainer
 
 "Basic Units
 "  key = [a-zA-Z_$][0-9a-zA-Z_$]*
@@ -68,7 +68,7 @@ syn match dustSpecialChars /\%({\~s\}\|{\~n\}\|{\~r\}\|{\~lb\}\|{\~rb\}\)/
 "  starts with a '{'
 "  followed immediately by an identifier
 "  followed immediately by a '}'
-syn match dustRef /\v\{\.?[0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter
+syn match dustRef /\v\{\.?[0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter containedin=@htmldustContainer
 " syn match dustRef /{.\?[0-9a-zA-Z_$|]*}/ 
 " syn region dustRef  start=/{/ end=/}/ oneline contains=@dustIdentifier,dustFilter
 
