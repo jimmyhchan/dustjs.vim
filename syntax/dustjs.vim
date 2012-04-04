@@ -33,27 +33,77 @@ else
 endif
 
 
-" variables ({hello}) 
-syntax region dustVariable matchgroup=dustMarker start=+{+ end=+}+ containedin=@htmldustContainer oneline
-  " special characters (space, newline, return, left brace, right brace)
-  syn match dustSpecialChars /\%(\~s\>\|\~n\>\|\~r\>\|\~lb\>\|\~rb\>\)/ containedin=dustVariable contained
-  " escaping encoding filters (disable escape - s, force html escape - h, js encodeURI - u, js encodeURI component -uc, force js escape- j)
-   syntax match dustFilters /\%(|s\>\||h\>\||u\>\||uc\>\||j\>\)/ containedin=dustVariable contained
+"Comment 
+"  starts with '{!'
+"  contain anything but '!}', including whitespace and newline
+"  ends with '!}'
+syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=htmldustContainer
+
+"Basic Units
+"  key = [a-zA-Z_$][0-9a-zA-Z_$]*
+"  path = .key
+"  filter = a bar followed by some key --- escaping encoding filters (disable escape - s, force html escape - h, js encodeURI - u, js encodeURI component -uc, force js escape- j)
+"  literal = syntax region xString    #empty string or a literal (contained in 'value of a param' and 'name of a partial'), not a tag and not eol
+"  inline_part = special, reference or an unquoted literal (contained in 'value of a param' and 'name of a partial')
+syn match dustKey /\v[a-zA-Z_$][0-9a-zA-Z_$]*/  contained
+syn match dustPath /\v\.?[a-zA-Z_$]?[0-9a-zA-Z_$]*/ contained
+syn match dustFilter /\%(|s\>\||h\>\||u\>\||uc\>\||j\>\)/ containedin=dustRef contained
+syn cluster dustIdentifier contains=dustKey,dustPath 
+syn region dustInline matchgroup=dustInlineContent start=/"/ skip=/\\"/ end=/"/ containedin=@dustParams contained contains=@dustInlinePart
+syn cluster dustInlinePart contains=dustSpecial,dustLiteral 
+syn match dustLiteral /\v[^"]*/ containedin=@dustInlinePart contained
+
+syn match dustContext /\v:[a-zA-Z_$][0-9azA-Z_$]*/ containedin=dustStartSectionTag,dustPartial contained 
+syn region dustParamKey matchgroup=dustParamKeyContent start=/[\t\v\f ]/ end=/=/ containedin=@dustParams contained contains=dustKey nextgroup=dustParamValue oneline
+syn region dustParamValue matchgroup=dustParamValueContent start=/=\"?/ end=/["\t\v\f ]|$/ containedin=@dustParams contained contains=@dustIdentifier,dustInline oneline
+syn cluster dustParams contains=dustParamKey,dustParamValue
+
+"Specials (space, newline, return, left brace, right brace)
+"  starts with a '{~'
+"  followed immediately by a key
+"  followed immediately by a '}'
+syn match dustSpecialChars /\%({\~s\}\|{\~n\}\|{\~r\}\|{\~lb\}\|{\~rb\}\)/ 
+
+"References
+"  starts with a '{'
+"  followed immediately by an identifier
+"  followed immediately by a '}'
+syn match dustRef /\v\{\.?[0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter
+" syn match dustRef /{.\?[0-9a-zA-Z_$|]*}/ 
+" syn region dustRef  start=/{/ end=/}/ oneline contains=@dustIdentifier,dustFilter
+
+"Section endtag
+"  starts with a '{/'
+"  followed immediately by an identifier
+"  followed immediately by a '}'
+syn match dustEndSectionTag /\v\{\/\.?[0-9a-zA-Z_$]*\}/ contains=@dustIdentifier
 
 
-" looping and other block type tags (section, exists, notexists, partial, block, helper, pragma ) [ #?^<+@% ]  
-syntax region dustNodeSections  matchgroup=dustSection start=+{[#?^<+@%]+ end=+}+ containedin=@htmldustContainer oneline
-syntax region dustInlinePartial matchgroup=dustSection start=+{[>]+ end=+\/}+ containedin=@htmldustContainer  oneline
-syntax region dustInlinePartialError matchgroup=dustError start=+{[>]+ end=+[^/]}+ containedin=@htmldustContainer  oneline
-syntax region dustEndTag matchgroup=dustEndSection start=+{[/]+ end=+}+ oneline
+"Section start_tag (all in one line)
+"  starts with '{[#?^<+@%]'
+"  followed immediately by a sectionName (an identifier)
+"  followed immediately by a sectionContext context (optional) -- ':' followed immediately by a key or path
+"  followed immediately by many param(s) (optional) -- whitespace, key, '=', key|path|inline
+"  followed immediately by a '}'
+syn match dustStartSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\}/ contains=@dustIdentifier,dustContext,@dustParams
+" syn region dustStartSectionTag matchgroup=dustStartSectionTagContent start=/{[#?^<+@%]/ end=/}/ contains=@dustIdentifier,dustContext,@dustParams
 
-" logic tags
-syn match dustConditional /\<\%(\:else\)\>/ containedin=dustSection contained
-" TODO: dustConditionalError  make {:else} outside a dust Section error
+"Partial self closing tag (all in one line)
+"  starts with a '{>'
+"  followed immediately by a key or an inline
+"  followed immediately by context (optional) -- ':' followed immediately by a key or path
+"  followed immediately by a '}'
+syn region dustPartial matchgroup=dustPartialContent  start=/{>/ end=/\/}/ contains=dustKey,dustInline,dustContext,dustPartialParamError oneline
+syn match dustPartialParamError /\v( [a-zA-Z0-9_$]+\="[^"]*")*/  containedin=dustPartial contained 
 
 
-" Comments
-syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=htmlHead
+"Section else conditional
+"  starts with a '{:'
+"  followed immediately by an key
+"  followed immediately by a '}'
+syn match dustConditional /\v\{:[a-zA-Z_$][0-9a-zA-Z_$]*\}/ 
+
+
 
 
 " Clustering
@@ -63,22 +113,34 @@ syntax cluster htmldustContainer add=htmlHead,htmlTitle,htmlString,htmlH1,htmlH2
 
 
 " Hilighting
-HtmlHiLink dustMarker Statement
-HtmlHiLink dustVariable Statement
-HtmlHiLink dustSpecialChars Characters
-HtmlHiLink dustFilters Special
+HtmlHiLink dustKey Identifier
+HtmlHiLink dustPath Include
+HtmlHiLink dustRef Statement
+HtmlHiLink dustSpecialChars Character
+HtmlHiLink dustFilter Special
 
-HtmlHiLink dustNodeSections Identifier
-HtmlHiLink dustSection Repeat
-HtmlHiLink dustInlinePartial Include
-HtmlHiLink dustEndTag Identifier
-HtmlHiLink dustEndSection Repeat
+HtmlHiLink dustStartSectionTag Repeat
+" HtmlHiLink dustStartSectionTagContent Error
+HtmlHiLink dustContext Special
+
+" HtmlHiLink dustParams Special
+" HtmlHiLink dustParamKey Special
+" HtmlHiLink dustParamKeyContent Error
+" HtmlHiLink dustParamValue Special
+" HtmlHiLink dustParamValueContent Error
+" HtmlHiLink dustInline Error
+" HtmlHiLink dustInlineContent Error
+
+HtmlHiLink dustPartial Include
+HtmlHiLink dustPartialContent Include
+
+HtmlHiLink dustEndSectionTag Repeat
 
 HtmlHiLink dustComment Comment
 HtmlHiLink dustConditional Conditional
 
 HtmlHiLink dustError Error
-HtmlHiLink dustInlinePartialError Error
+HtmlHiLink dustPartialParamError Error
 
 let b:current_syntax = "dustjs"
 delcommand HtmlHiLink
