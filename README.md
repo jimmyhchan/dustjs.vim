@@ -21,8 +21,8 @@ dustjs.vim for working with dust js templates (http://akdubya.github.com/dustjs/
 
 * tpope's surround
    let g:surround_{char2nr('d')} = "{\r}"
-* snipmate
-   copy the snippets/dustjs folder to your snippets folder
+* snipmate (https://github.com/garbas/vim-snipmate)
+   snipmate should be pathogen aware so it should work out of the box 
 
 ## Thanks
 * [Github/juvenn](/juvenn) for the mustache.vim plugin

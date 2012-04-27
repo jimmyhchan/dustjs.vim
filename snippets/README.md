@@ -1,1 +1,2 @@
-this folder belongs in snipmates snippets folder
+are you using garbas' fork?
+https://github.com/garbas/vim-snipmate
