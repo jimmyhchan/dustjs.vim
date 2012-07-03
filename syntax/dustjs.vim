@@ -46,7 +46,7 @@ syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=@htmldus
 "  literal = syntax region xString    #empty string or a literal (contained in 'value of a param' and 'name of a partial'), not a tag and not eol
 "  inline_part = special, reference or an unquoted literal (contained in 'value of a param' and 'name of a partial')
 syn match dustKey /\v[a-zA-Z_$][0-9a-zA-Z_$]*/  contained
-syn match dustPath /\v\.?[a-zA-Z_$]?[0-9a-zA-Z_$]*/ contained
+syn match dustPath /\v(\.?[a-zA-Z_$]?[0-9a-zA-Z_$]*)+/ contained
 syn match dustFilter /\%(|s\>\||h\>\||u\>\||uc\>\||j\>\)/ containedin=dustRef contained
 syn cluster dustIdentifier contains=dustKey,dustPath 
 syn region dustInline matchgroup=dustInlineContent start=/"/ skip=/\\"/ end=/"/ containedin=@dustParams contained contains=@dustInlinePart
@@ -68,7 +68,7 @@ syn match dustSpecialChars /\%({\~s\}\|{\~n\}\|{\~r\}\|{\~lb\}\|{\~rb\}\)/
 "  starts with a '{'
 "  followed immediately by an identifier
 "  followed immediately by a '}'
-syn match dustRef /\v\{\.?[0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter containedin=@htmldustContainer
+syn match dustRef /\v\{(\.?[0-9a-zA-Z_$|]*)+\}/ contains=@dustIdentifier,dustFilter containedin=@htmldustContainer
 " syn match dustRef /{.\?[0-9a-zA-Z_$|]*}/ 
 " syn region dustRef  start=/{/ end=/}/ oneline contains=@dustIdentifier,dustFilter
 
@@ -76,7 +76,7 @@ syn match dustRef /\v\{\.?[0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter
 "  starts with a '{/'
 "  followed immediately by an identifier
 "  followed immediately by a '}'
-syn match dustEndSectionTag /\v\{\/\.?[0-9a-zA-Z_$]*\}/ contains=@dustIdentifier
+syn match dustEndSectionTag /\v\{\/(\.?[0-9a-zA-Z_$]*)+\}/ contains=@dustIdentifier
 
 
 "Section start_tag (all in one line)

@@ -24,9 +24,9 @@
       {/names}
         
       {! rename_key, params, context !}
-      {#person:cntxt foo=root bar="{abcde}" baz="{~s}"}
+      {#.person.foo:cntxt foo=root bar="{abcde}" baz="{~s}"}
         {foo}: {name}, {age}
-      {/person}
+      {/.person.foo}
       
       {! escape !}
       {safe|s}{~n}{unsafe}
