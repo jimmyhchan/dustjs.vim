@@ -53,7 +53,7 @@ syn region dustInline matchgroup=dustInlineContent start=/"/ skip=/\\"/ end=/"/ 
 syn cluster dustInlinePart contains=dustSpecial,dustLiteral 
 syn match dustLiteral /\v[^"]*/ containedin=@dustInlinePart contained
 
-syn match dustContext /\v:[a-zA-Z_$][0-9azA-Z_$]*/ containedin=dustStartSectionTag,dustPartial contained 
+syn match dustContext /\v:[a-zA-Z_$][0-9azA-Z_$]*/ containedin=dustStartSectionTag,dustSelfClosingSectionTag,dustPartial contained 
 syn region dustParamKey matchgroup=dustParamKeyContent start=/[\t ]/ end=/=/ containedin=@dustParams contained contains=dustKey nextgroup=dustParamValue oneline
 syn region dustParamValue matchgroup=dustParamValueContent start=/=\"?/ end=/["\t ]|$/ containedin=@dustParams contained contains=@dustIdentifier,dustInline oneline
 syn cluster dustParams contains=dustParamKey,dustParamValue
@@ -86,7 +86,7 @@ syn match dustEndSectionTag /\v\{\/(\.?[0-9a-zA-Z_$]*)+\}/ contains=@dustIdentif
 "  followed immediately by many param(s) (optional) -- whitespace, key, '=', key|path|inline
 "  followed immediately by a '}'
 syn match dustStartSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\}/ contains=@dustIdentifier,dustContext,@dustParams
-" syn region dustStartSectionTag matchgroup=dustStartSectionTagContent start=/{[#?^<+@%]/ end=/}/ contains=@dustIdentifier,dustContext,@dustParams
+syn match dustSelfClosingSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\/\}/ contains=@dustIdentifier,dustContext,@dustParams
 
 "Partial self closing tag (all in one line)
 "  starts with a '{>'
@@ -120,7 +120,7 @@ HtmlHiLink dustSpecialChars Character
 HtmlHiLink dustFilter Special
 
 HtmlHiLink dustStartSectionTag Repeat
-" HtmlHiLink dustStartSectionTagContent Error
+HtmlHiLink dustSelfClosingSectionTag Repeat
 HtmlHiLink dustContext Special
 
 " HtmlHiLink dustParams Special
