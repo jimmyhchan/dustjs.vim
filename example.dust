@@ -28,6 +28,10 @@
         {foo}: {name}, {age}
       {/.person.foo}
       
+      {! self closing section tags !}
+      {@helper with="params"/}
+      {+block/}
+
       {! escape !}
       {safe|s}{~n}{unsafe}
 
