@@ -20,7 +20,7 @@
 
       {! array !}
       {#names}
-        {title} {name}{~n}
+        {title} {name.that}{.}{~n}
       {/names}
         
       {! rename_key, params, context !}

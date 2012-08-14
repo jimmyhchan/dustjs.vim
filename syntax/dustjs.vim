@@ -46,7 +46,7 @@ syntax region dustComment start=+{!+ end=+!}+ contains=Todo containedin=@htmldus
 "  literal = syntax region xString    #empty string or a literal (contained in 'value of a param' and 'name of a partial'), not a tag and not eol
 "  inline_part = special, reference or an unquoted literal (contained in 'value of a param' and 'name of a partial')
 syn match dustKey /\v[a-zA-Z_$][0-9a-zA-Z_$]*/  contained
-syn match dustPath /\v(\.?[a-zA-Z_$]?[0-9a-zA-Z_$]*)+/ contained
+syn match dustPath /\v\.?[a-zA-Z_$]?[.0-9a-zA-Z_$]*/ contained
 syn match dustFilter /\%(|s\>\||h\>\||u\>\||uc\>\||j\>\)/ containedin=dustRef contained
 syn cluster dustIdentifier contains=dustKey,dustPath 
 syn region dustInline matchgroup=dustInlineContent start=/"/ skip=/\\"/ end=/"/ containedin=@dustParams contained contains=@dustInlinePart
@@ -68,7 +68,7 @@ syn match dustSpecialChars /\%({\~s\}\|{\~n\}\|{\~r\}\|{\~lb\}\|{\~rb\}\)/
 "  starts with a '{'
 "  followed immediately by an identifier
 "  followed immediately by a '}'
-syn match dustRef /\v\{(\.?[0-9a-zA-Z_$|]*)+\}/ contains=@dustIdentifier,dustFilter containedin=@htmldustContainer
+syn match dustRef /\v\{[.0-9a-zA-Z_$|]*\}/ contains=@dustIdentifier,dustFilter containedin=@htmldustContainer
 " syn match dustRef /{.\?[0-9a-zA-Z_$|]*}/ 
 " syn region dustRef  start=/{/ end=/}/ oneline contains=@dustIdentifier,dustFilter
 
@@ -76,7 +76,7 @@ syn match dustRef /\v\{(\.?[0-9a-zA-Z_$|]*)+\}/ contains=@dustIdentifier,dustFil
 "  starts with a '{/'
 "  followed immediately by an identifier
 "  followed immediately by a '}'
-syn match dustEndSectionTag /\v\{\/(\.?[0-9a-zA-Z_$]*)+\}/ contains=@dustIdentifier
+syn match dustEndSectionTag /\v\{\/([.0-9a-zA-Z_$])*\}/ contains=@dustIdentifier
 
 
 "Section start_tag (all in one line)
@@ -85,7 +85,7 @@ syn match dustEndSectionTag /\v\{\/(\.?[0-9a-zA-Z_$]*)+\}/ contains=@dustIdentif
 "  followed immediately by a sectionContext context (optional) -- ':' followed immediately by a key or path
 "  followed immediately by many param(s) (optional) -- whitespace, key, '=', key|path|inline
 "  followed immediately by a '}'
-syn match dustStartSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\}/ contains=@dustIdentifier,dustContext,@dustParams
+syn match dustStartSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[.a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\}/ contains=@dustIdentifier,dustContext,@dustParams
 syn match dustSelfClosingSectionTag /\v\{[#?^<+@%][a-zA-Z_$.0-9]+(:[a-zA-Z_$0-9]+)?( [a-zA-Z0-9_$]+\="?[^"]*"?)*\/\}/ contains=@dustIdentifier,dustContext,@dustParams
 
 "Partial self closing tag (all in one line)
