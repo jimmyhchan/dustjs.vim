@@ -24,7 +24,7 @@
       {/names}
         
       {! rename_key, params, context !}
-      {#.person.foo:cntxt foo=root bar="{abcde}" baz="{~s}"}
+      {#abc.person.foo:cntxt space="hello this is {dog}" foo=root bar="{abcde}" baz="a {~s}"}
         {foo}: {name}, {age}
       {/.person.foo}
       
@@ -33,7 +33,7 @@
       {+block/}
 
       {! escape !}
-      {safe|s}{~n}{unsafe}
+      {safe|s}{~s}{unsafe}
 
       {! else_block, conditional !}
       {^foo}
